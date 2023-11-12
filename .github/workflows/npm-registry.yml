@@ -1,0 +1,71 @@
+name: Publishing a package
+
+on:
+  workflow_call:
+    inputs:
+      domain:
+        type: string
+        required: true
+      registry:
+        type: string
+        required: true
+    outputs:
+      package_name:
+        description: "Package name"
+        value: ${{jobs.publish.outputs.package_name}}
+      package_version:
+        description: "Package version"
+        value: ${{jobs.publish.outputs.package_version}}
+    secrets:
+      token:
+        required: true 
+
+env:
+  workflows_repo: Workflows
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    outputs:
+      package_name: ${{steps.semantic.outputs.name}}
+      package_version: ${{steps.semantic.outputs.version}}
+
+    steps:
+      - name: Chechout this repository
+        uses: actions/checkout@v4
+
+      - name: Checkout reusable workflows repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{github.repository_owner}}/${{env.workflows_repo}}
+          path: ${{env.workflows_repo}}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          always-auth: true
+          node-version: '14.x'
+          registry-url: ${{inputs.registry}}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Authenticate to NPM
+        run: |
+          chmod +x ${{env.workflows_repo}}/.github/scripts/auth-npm.sh
+          ${{env.workflows_repo}}/.github/scripts/auth-npm.sh
+        env:
+          NPM_DOMAIN: ${{inputs.domain}}
+          NPM_REGISTRY: ${{inputs.registry}}
+          NPM_AUTH_TOKEN: ${{secrets.token}}
+
+      - name: Semantic release
+        id: semantic
+        run: |
+          chmod +x ${{env.workflows_repo}}/.github/scripts/semantic-release.sh
+          ${{env.workflows_repo}}/.github/scripts/semantic-release.sh
+
+      - name: Publish to package registry
+        if: steps.semantic.outputs.status == 'success'
+        run: npm publish

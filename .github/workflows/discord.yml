@@ -1,0 +1,41 @@
+name: Sending a Discord notification
+
+on:
+  workflow_call:
+    inputs:
+      package_name:
+        type: string
+        required: true
+      package_version:
+        type: string
+        required: true
+      discord_username:
+        type: string
+        required: true
+    secrets:
+      discord_webhook:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{secrets.discord_webhook}}
+          DISCORD_USERNAME: ${{inputs.discord_username}}
+          DISCORD_AVATAR: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+          DISCORD_EMBEDS: '[    { 
+            "author": {  "icon_url": "https://avatars.githubusercontent.com/${{ github.actor }}", "name": "${{ github.actor }}", "url": "https://github.com/${{github.actor}}" },
+            "url": "https://github.com/${{github.repository}}/commit/${{github.sha}}",
+            "fields": [
+            { "name": "Repository", "value": "[${{github.event.repository.name}}](${{github.event.repository.clone_url}})", "inline": true },
+            { "name": "Branch", "value": "[${{github.ref_name}}](https://github.com/${{github.repository}}/tree/${{github.ref_name}})", "inline": true },
+            { "name": "Package", "value": "📦 `${{inputs.package_name}}@${{inputs.package_version}}`" },
+            { "name": "Author", "value": "[${{github.event.head_commit.author.name}}](https://github.com/${{github.actor}})" }
+            ],
+            "color":1127128,
+            "timestamp": "${{github.event.head_commit.timestamp}}",
+            "footer":{"text": "${{github.event.head_commit.timestamp}}"}
+            }    ]'
