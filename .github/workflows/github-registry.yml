@@ -3,6 +3,9 @@ name: Publishing a package to GitHub
 on:
   workflow_call:
     inputs:
+      scope: 
+        type: string
+        required: false
       domain:
         type: string
         required: true
@@ -44,22 +47,20 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          always-auth: true
           node-version: '14.x'
+          #scope: ${{inputs.scope}}
           registry-url: ${{inputs.registry}}
-
+          
       - name: Install dependencies
         run: npm install
 
       - name: Authenticate to NPM
         run: |
-          chmod +x ${{env.workflows_repository}}/.github/scripts/auth-npm.sh
-          ${{env.workflows_repository}}/.github/scripts/auth-npm.sh
-        env:
-          NPM_DOMAIN: ${{inputs.domain}}
-          NPM_REGISTRY: ${{inputs.registry}}
-          NPM_AUTH_TOKEN: ${{secrets.token}}
-
+          echo "//${{inputs.domain}}/:_authToken=${{secrets.token}}
+          ${{inputs.scope}}:registry=${{inputs.registry}}" >> .npmrc
+          cat .npmrc
+          npm whoami
+    
       - name: Semantic release
         id: semantic
         run: |
