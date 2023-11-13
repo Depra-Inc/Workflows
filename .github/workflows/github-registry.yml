@@ -24,7 +24,6 @@ on:
         required: true 
 
 env:
-  NODE_AUTH_TOKEN: ${{secrets.token}}
   workflows_repository: Workflows
 
 jobs:
@@ -52,7 +51,9 @@ jobs:
           node-version: '14.x'
           scope: ${{inputs.scope}}
           registry-url: ${{inputs.registry}}
-          
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.token}}
+
       - name: Install dependencies
         run: npm install
 

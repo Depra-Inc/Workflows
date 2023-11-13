@@ -32,14 +32,10 @@ jobs:
       package_version: ${{steps.semantic.outputs.version}}
 
     steps:
-      - name: Chechout this repository
-        uses: actions/checkout@v4
-
-      - name: Checkout reusable workflows repository
-        uses: actions/checkout@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
         with:
-          repository: ${{github.repository_owner}}/${{env.workflows_repository}}
-          path: ${{env.workflows_repository}}
+          name: scripts
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -53,8 +49,9 @@ jobs:
 
       - name: Authenticate to NPM
         run: |
-          chmod +x ${{env.workflows_repository}}/.github/scripts/auth-npm.sh
-          ${{env.workflows_repository}}/.github/scripts/auth-npm.sh
+          ls -la
+          chmod +x ./auth-npm.sh
+          ./auth-npm.sh
         env:
           NPM_DOMAIN: ${{inputs.domain}}
           NPM_REGISTRY: ${{inputs.registry}}
@@ -63,8 +60,8 @@ jobs:
       - name: Semantic release
         id: semantic
         run: |
-          chmod +x ${{env.workflows_repository}}/.github/scripts/semantic-release.sh
-          ${{env.workflows_repository}}/.github/scripts/semantic-release.sh
+          chmod +x ./semantic-release.sh
+          ./semantic-release.sh
 
       - name: Publish to package registry
         if: steps.semantic.outputs.status == 'success'

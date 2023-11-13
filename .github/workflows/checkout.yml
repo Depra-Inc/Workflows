@@ -1,0 +1,26 @@
+name: Checkout repository and workflows
+
+on: [workflow_call]
+
+env:
+  workflows_repository: Workflows
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chechout this repository
+        uses: actions/checkout@v3.5.3
+
+      - name: Checkout reusable workflows repository
+        uses: actions/checkout@v3.5.3
+        with:
+          path: ${{env.workflows_repository}}
+          repository: ${{github.repository_owner}}/${{env.workflows_repository}}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: scripts
+          path:  ${{env.workflows_repository}}/.github/scripts
