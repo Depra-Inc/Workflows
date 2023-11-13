@@ -27,10 +27,8 @@ jobs:
       package_version: ${{steps.semantic.outputs.version}}
 
     steps:
-      - name: Download package artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: package
+      - name: Chechout repository
+        uses: actions/checkout@v4
   
       - name: Download workflows artifacts
         uses: actions/download-artifact@v3
@@ -45,22 +43,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Authenticate to NPM
-        run: |
-          echo "//${{inputs.domain}}/:_authToken=${{secrets.token}}
-          registry=${{inputs.registry}}" >> .npmrc
-
-      - name: Compare npm with local (versions)
-        uses: Rober19/compare-npm-versions-ci@master
-        id: package_version
+      - name: Patch .npmrc
+        uses: Depra-Inc/Setup.Npmrc@v1
         with:
-          path: './'
-          npm_package_name: $(jq -r '.name' package.json)
-
-      - name: Get version
-        run: |
-          echo "Version is  ${{ steps.package_version.outputs.version }} "    
-          echo "Version NPM is  ${{ steps.package_version.outputs.pkg_npm_version }} "
+          token: ${{secrets.token}}
+          domain: ${{inputs.domain}}
+          registry: ${{inputs.registry}}
 
       - name: Semantic release
         id: semantic
