@@ -44,7 +44,7 @@ jobs:
         run: npm install
 
       - name: Patch .npmrc
-        uses: Depra-Inc/Setup.Npmrc@v1
+        uses: Depra-Inc/Setup.Npmrc@v1.1
         with:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
