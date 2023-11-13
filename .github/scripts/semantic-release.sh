@@ -6,6 +6,8 @@ echo "Package name: $package_name"
 commit_version=$(jq -r '.version' package.json)
 echo "Commit version: $commit_version"
 
+contains=$(npm ls | grep $package_name)
+echo $contains
 latest_version=$(npm info ${package_name} version)
 echo "Latest version: $latest_version"
 

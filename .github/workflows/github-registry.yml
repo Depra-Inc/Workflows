@@ -24,6 +24,7 @@ on:
         required: true 
 
 env:
+  NODE_AUTH_TOKEN: ${{secrets.token}}
   workflows_repository: Workflows
 
 jobs:
@@ -47,19 +48,20 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
+          always-auth: true
           node-version: '14.x'
-          #scope: ${{inputs.scope}}
+          scope: ${{inputs.scope}}
           registry-url: ${{inputs.registry}}
           
       - name: Install dependencies
         run: npm install
 
-      - name: Authenticate to NPM
-        run: |
-          echo "//${{inputs.domain}}/:_authToken=${{secrets.token}}
-          ${{inputs.scope}}:registry=${{inputs.registry}}" >> .npmrc
-          cat .npmrc
-          npm whoami
+      #- name: Authenticate to NPM
+      #  run: |
+      #    echo "//${{inputs.domain}}/:_authToken=${{secrets.token}}
+      #    ${{inputs.scope}}:registry=${{inputs.registry}}" >> .npmrc
+      #    cat .npmrc
+      #    npm whoami
     
       - name: Semantic release
         id: semantic
