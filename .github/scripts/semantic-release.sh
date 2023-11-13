@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 package_name=$(jq -r '.name' package.json)
 echo "Package name: $package_name"
 

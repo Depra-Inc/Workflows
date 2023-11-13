@@ -16,10 +16,7 @@ on:
         value: ${{jobs.publish.outputs.package_version}}
     secrets:
       token:
-        required: true 
-
-env:
-  workflows_repository: Workflows
+        required: true
 
 jobs:
   publish:
@@ -43,22 +40,27 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          always-auth: true
           node-version: '14.x'
-          registry-url: ${{inputs.registry}}
 
       - name: Install dependencies
         run: npm install
 
       - name: Authenticate to NPM
         run: |
-          ls -la
-          chmod +x ./auth-npm.sh
-          ./auth-npm.sh
-        env:
-          NPM_DOMAIN: ${{inputs.domain}}
-          NPM_REGISTRY: ${{inputs.registry}}
-          NPM_AUTH_TOKEN: ${{secrets.token}}
+          echo "//${{inputs.domain}}/:_authToken=${{secrets.token}}
+          registry=${{inputs.registry}}" >> .npmrc
+
+      - name: Compare npm with local (versions)
+        uses: Rober19/compare-npm-versions-ci@master
+        id: package_version
+        with:
+          path: './'
+          npm_package_name: $(jq -r '.name' package.json)
+
+      - name: Get version
+        run: |
+          echo "Version is  ${{ steps.package_version.outputs.version }} "    
+          echo "Version NPM is  ${{ steps.package_version.outputs.pkg_npm_version }} "
 
       - name: Semantic release
         id: semantic
