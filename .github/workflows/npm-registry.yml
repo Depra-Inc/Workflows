@@ -11,10 +11,8 @@ on:
         required: true
     outputs:
       package_name:
-        description: "Package name"
         value: ${{jobs.publish.outputs.package_name}}
       package_version:
-        description: "Package version"
         value: ${{jobs.publish.outputs.package_version}}
     secrets:
       token:
@@ -32,7 +30,12 @@ jobs:
       package_version: ${{steps.semantic.outputs.version}}
 
     steps:
-      - name: Download artifacts
+      - name: Download package artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: package
+  
+      - name: Download workflows artifacts
         uses: actions/download-artifact@v3
         with:
           name: scripts
@@ -59,9 +62,7 @@ jobs:
 
       - name: Semantic release
         id: semantic
-        run: |
-          chmod +x ./semantic-release.sh
-          ./semantic-release.sh
+        run: chmod +x ./semantic-release.sh && ./semantic-release.sh
 
       - name: Publish to package registry
         if: steps.semantic.outputs.status == 'success'

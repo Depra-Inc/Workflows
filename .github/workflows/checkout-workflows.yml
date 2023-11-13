@@ -1,4 +1,4 @@
-name: Checkout repository and workflows
+name: Checkout Depra-Inc workflows
 
 on: [workflow_call]
 
@@ -10,16 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Chechout this repository
-        uses: actions/checkout@v3.5.3
-
       - name: Checkout reusable workflows repository
-        uses: actions/checkout@v3.5.3
+        uses: actions/checkout@v4
         with:
           path: ${{env.workflows_repository}}
           repository: ${{github.repository_owner}}/${{env.workflows_repository}}
 
-      - name: Upload artifacts
+      - name: Upload scripts artifacts
         uses: actions/upload-artifact@v3
         with:
           name: scripts
