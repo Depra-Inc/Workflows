@@ -29,11 +29,6 @@ jobs:
     steps:
       - name: Chechout repository
         uses: actions/checkout@v4
-  
-      - name: Download workflows artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: scripts
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
@@ -44,16 +39,16 @@ jobs:
         run: npm install
 
       - name: Patch .npmrc
-        uses: Depra-Inc/Setup.Npmrc@v1.1
+        uses: Depra-Inc/Setup.Npmrc@main
         with:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
 
-      - name: Semantic release
+      - name: Semantic version validation
         id: semantic
-        run: chmod +x ./semantic-release.sh && ./semantic-release.sh
+        uses: Depra-Inc/SemVer.Guard@main
 
       - name: Publish to package registry
-        if: steps.semantic.outputs.status == 'success'
+        if: steps.semantic.outputs.increased == true
         run: npm publish
