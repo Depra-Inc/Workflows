@@ -1,0 +1,40 @@
+name: Publish package to NPM and Github Packages
+
+on: 
+  workflow_call:
+    secrets:
+      npm:
+        required: true
+      github:
+        required: true
+      discord_webhook:
+        required: true
+
+jobs:
+    gpr:
+      uses: Depra-Inc/Workflows/.github/workflows/gpr.yml@main
+      secrets:
+        token: ${{secrets.github}}
+      with:
+        scope: 'Depra-Inc'
+        domain: npm.pkg.github.com
+        registry: https://npm.pkg.github.com
+  
+    npr:
+      uses: Depra-Inc/Workflows/.github/workflows/npr.yml@main
+      secrets:
+        token: ${{secrets.npm}}
+      with:
+        domain: depra.org
+        registry: https://depra.org/npm
+  
+    discord:
+      needs: npr
+      if: needs.npr.outputs.published == 'true'
+      uses: Depra-Inc/Workflows/.github/workflows/discord.yml@main
+      secrets:
+        discord_webhook: ${{secrets.discord_webhook}}
+      with:
+        discord_username: Depra Inc.
+        package_name: ${{needs.npr.outputs.package_name}}
+        package_version: ${{needs.npr.outputs.package_version}}
