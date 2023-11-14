@@ -49,6 +49,9 @@ jobs:
         id: semantic
         uses: Depra-Inc/SemVer.Guard@main
 
+      - name: Debug
+        run: echo ${{steps.semantic.outputs.increased}}
+
       - name: Publish to package registry
-        if: steps.semantic.outputs.increased == true
+        if: steps.semantic.outputs.increased == 'true'
         run: npm publish
