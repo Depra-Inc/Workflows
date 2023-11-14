@@ -10,6 +10,8 @@ on:
         type: string
         required: true
     outputs:
+      published:
+        value: ${{jobs.publish.outputs.published}}
       package_name:
         value: ${{jobs.publish.outputs.package_name}}
       package_version:
@@ -53,4 +55,6 @@ jobs:
       - name: Publish to package registry
         id: publish
         if: steps.semantic.outputs.increased == 'true'
-        run: npm publish && echo "published=true" >> $GITHUB_OUTPUT
+        run: |
+          npm publish
+          echo "published=true" >> $GITHUB_OUTPUT
