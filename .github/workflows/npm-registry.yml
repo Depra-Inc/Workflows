@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      published: ${{steps.publish.outputs.published}}
       package_name: ${{steps.semantic.outputs.name}}
       package_version: ${{steps.semantic.outputs.version}}
 
@@ -49,9 +50,7 @@ jobs:
         id: semantic
         uses: Depra-Inc/SemVer.Guard@main
 
-      - name: Debug
-        run: echo ${{steps.semantic.outputs.increased}}
-
       - name: Publish to package registry
+        id: publish
         if: steps.semantic.outputs.increased == 'true'
-        run: npm publish
+        run: npm publish && echo "published=true" >> $GITHUB_OUTPUT
