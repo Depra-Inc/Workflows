@@ -9,6 +9,9 @@ on:
       registry:
         type: string
         required: true
+      scope:
+        type: string
+        required: false
     outputs:
       published:
         value: ${{jobs.publish.outputs.published}}
@@ -44,6 +47,7 @@ jobs:
       - name: Patch .npmrc
         uses: Depra-Inc/Setup.Npmrc@main
         with:
+          scope: ${{inputs.scope}}
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
