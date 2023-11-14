@@ -1,4 +1,4 @@
-name: Publishing a package
+name: Publishing a package to NPM
 
 on:
   workflow_call:

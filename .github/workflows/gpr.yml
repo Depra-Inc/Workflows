@@ -1,4 +1,4 @@
-name: Publishing a package
+name: Publishing a package to GitHub Packages
 
 on:
   workflow_call:
@@ -39,7 +39,6 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          scope: ${{inputs.scope}}
           node-version: '14.x'
 
       - name: Install dependencies
@@ -52,6 +51,9 @@ jobs:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
+
+      - name: Patch package name
+        run: npx json -I -f package.json -e "this.name='@${{inputs.scope}}/' + this.name"
 
       - name: Semantic version validation
         id: semantic
