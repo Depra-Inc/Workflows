@@ -1,0 +1,31 @@
+name: Publishing a package to GitHub Packages and sending a Discord notification
+
+on:
+  workflow_call:
+    secrets:
+      node_auth_token:
+        required: true
+      discord_webhook:
+        required: true
+
+jobs:
+    publish:
+      uses: Depra-Inc/Workflows/.github/workflows/publish-gpr.yml@main
+      secrets:
+        token: ${{secrets.node_auth_token}}
+      with:
+        scope: ${{github.repository_owner}}
+        domain: npm.pkg.github.com
+        registry: https://npm.pkg.github.com
+  
+    notify:
+      needs: publish
+      if: needs.publish.outputs.published == 'true'
+      uses: Depra-Inc/Workflows/.github/workflows/notify-discord.yml@main
+      secrets:
+        discord_webhook: ${{secrets.discord_webhook}}
+      with:
+        avatar_url: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+        discord_username: Depra [GitHub Packages]
+        package_name: ${{needs.publish.outputs.package_name}}
+        package_version: ${{needs.publish.outputs.package_version}}

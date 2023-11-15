@@ -3,6 +3,9 @@ name: Sending a Discord notification
 on:
   workflow_call:
     inputs:
+      avatar_url:
+        type: string
+        required: true
       package_name:
         type: string
         required: true
@@ -25,7 +28,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{secrets.discord_webhook}}
           DISCORD_USERNAME: ${{inputs.discord_username}}
-          DISCORD_AVATAR: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+          DISCORD_AVATAR: ${{inputs.avatar_url}}
           DISCORD_EMBEDS: '[    { 
             "author": {  "icon_url": "https://avatars.githubusercontent.com/${{ github.actor }}", "name": "${{ github.actor }}", "url": "https://github.com/${{github.actor}}" },
             "url": "https://github.com/${{github.repository}}/commit/${{github.sha}}",
