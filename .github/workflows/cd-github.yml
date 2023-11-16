@@ -14,9 +14,8 @@ jobs:
       secrets:
         token: ${{secrets.node_auth_token}}
       with:
-        scope: ${{github.repository_owner}}
         domain: npm.pkg.github.com
-        registry: https://npm.pkg.github.com
+        registry: https://npm.pkg.github.com/@${{github.repository_owner}}
   
     notify:
       needs: publish

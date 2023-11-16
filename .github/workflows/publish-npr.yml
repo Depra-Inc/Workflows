@@ -39,7 +39,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '14.x'
+          node-version: '16'
 
       - name: Patch .npmrc
         uses: Depra-Inc/Setup.Npmrc@main
