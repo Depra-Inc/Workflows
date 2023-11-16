@@ -1,4 +1,4 @@
-name: Sending a Discord notification
+name: Release notification on Discord
 
 on:
   workflow_call:

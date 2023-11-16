@@ -1,4 +1,4 @@
-name: Publishing a package to GitHub Packages
+name: GitHub Packages publishing
 
 on:
   workflow_call:

@@ -1,4 +1,4 @@
-name: Publishing a package to GitHub Packages and sending a Discord notification
+name: GitHub Packages deployment & Discord notification
 
 on:
   workflow_call:

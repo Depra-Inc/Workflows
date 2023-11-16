@@ -1,4 +1,4 @@
-name: Publishing a package to NPM and sending a Discord notification
+name: NPM deployment & Discord notification
 
 on:
   workflow_call:
