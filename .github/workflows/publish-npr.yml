@@ -33,16 +33,13 @@ jobs:
       package_version: ${{steps.semantic.outputs.version}}
 
     steps:
-      - name: Chechout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
           node-version: '14.x'
-
-      - name: Install dependencies
-        run: npm install
 
       - name: Patch .npmrc
         uses: Depra-Inc/Setup.Npmrc@main
@@ -51,6 +48,9 @@ jobs:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Semantic version validation
         id: semantic
