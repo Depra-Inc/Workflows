@@ -39,7 +39,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 20
 
       - name: Patch .npmrc
         uses: Depra-Inc/Setup.Npmrc@main
@@ -48,12 +48,6 @@ jobs:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
-
-      - name: Update npm
-        run: npm update
-
-      - name: Install dependencies
-        run: npm install
 
       - name: Semantic version validation
         id: semantic

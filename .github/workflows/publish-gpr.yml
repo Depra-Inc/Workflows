@@ -41,7 +41,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: 20
 
       - name: Patch .npmrc
         uses: Depra-Inc/Setup.Npmrc@main
@@ -50,26 +50,6 @@ jobs:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
-
-      #- name: Patch package dependencies
-      #  run: |
-      #    node -e "
-      #      const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
-      #      packageJson.dependencies = Object.fromEntries(
-      #        Object.entries(packageJson.dependencies).map(([key, value]) => {
-      #          if (key.startsWith('com.depra')) {
-      #            return ['@${{inputs.scope}}/' + key, value];
-      #          } else {
-      #            return [key, value];
-      #          }
-      #        })
-      #      );
-      #      fs.writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
-      #      console.log(JSON.stringify(packageJson.dependencies, null, 2));
-      #    "
-
-      - name: Install dependencies
-        run: npm install
 
       - name: Semantic version validation
         id: semantic
