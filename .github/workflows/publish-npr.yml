@@ -49,6 +49,9 @@ jobs:
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
 
+      - name: Update npm
+        run: npm update
+
       - name: Install dependencies
         run: npm install
 
