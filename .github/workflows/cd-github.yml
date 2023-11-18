@@ -2,6 +2,11 @@ name: GitHub Packages deployment & Discord notification
 
 on:
   workflow_call:
+    inputs:
+      unsafe:
+        type: boolean
+        default: false
+        required: false
     secrets:
       node_auth_token:
         required: true
@@ -16,6 +21,7 @@ jobs:
       with:
         domain: npm.pkg.github.com
         registry: https://npm.pkg.github.com/@${{github.repository_owner}}
+        unsafe: ${{inputs.unsafe}}
   
     notify:
       needs: publish

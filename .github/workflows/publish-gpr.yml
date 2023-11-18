@@ -12,6 +12,10 @@ on:
       scope:
         type: string
         required: false
+      unsafe:
+        type: boolean
+        default: false
+        required: false
     outputs:
       published:
         value: ${{jobs.publish.outputs.published}}
@@ -50,6 +54,10 @@ jobs:
           token: ${{secrets.token}}
           domain: ${{inputs.domain}}
           registry: ${{inputs.registry}}
+
+      - name: Install dependencies
+        if: ${{inputs.unsafe == false}}
+        run: npm install
 
       - name: Semantic version validation
         id: semantic

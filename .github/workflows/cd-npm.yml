@@ -2,6 +2,11 @@ name: NPM deployment & Discord notification
 
 on:
   workflow_call:
+    inputs:
+      unsafe:
+        type: boolean
+        default: false
+        required: false
     secrets:
       node_auth_token:
         required: true
@@ -16,6 +21,7 @@ jobs:
       with:
         domain: depra.org
         registry: https://depra.org/npm
+        unsafe: ${{inputs.unsafe}}
   
     notify:
       needs: publish
