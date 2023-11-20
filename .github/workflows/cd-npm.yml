@@ -15,7 +15,7 @@ on:
 
 jobs:
     publish:
-      uses: Depra-Inc/Workflows/.github/workflows/publish-npr.yml@main
+      uses: Depra-Inc/Workflows/.github/workflows/publish-package.yml@main
       secrets:
         token: ${{secrets.node_auth_token}}
       with:
