@@ -30,7 +30,7 @@ jobs:
       secrets:
         discord_webhook: ${{secrets.discord_webhook}}
       with:
-        avatar_url: 'https://i.postimg.cc/1VVMf4L1/npm.png'
+        avatar_url: 'https://i.postimg.cc/jSyXmn4c/npm.png'
         discord_username: 'Depra [NPM]'
         package_name: ${{needs.publish.outputs.package_name}}
         package_version: ${{needs.publish.outputs.package_version}}
